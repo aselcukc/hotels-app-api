@@ -1,0 +1,34 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "node": true
+  },
+  "rules": {
+    "import/newline-after-import": "off",
+    "no-console": "off",
+    "comma-dangle": "off",
+    "import/no-dynamic-require": "off",
+    "no-param-reassign": "off",
+    "semi": "off",
+    "eol-last": "off",
+    "consistent-return": "off",
+    "arrow-parens": "off",
+    "arrow-body-style": "off",
+    "eqeqeq": "off",
+    "no-underscore-dangle": "off",
+    "space-before-function-paren": "off",
+    "import/prefer-default-export": "off",
+    "global-require": "off",
+    "no-restricted-globals": "off",
+    "indent": "off",
+    "function-paren-newline": "off",
+    "object-curly-newline": "off",
+    "max-len": "off",
+    "class-methods-use-this": "off",
+    "camelcase": "off",
+    "func-names": "off",
+    "import/extensions": "off"
+  }
+}
