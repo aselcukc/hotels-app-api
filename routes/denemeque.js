@@ -1,4 +1,4 @@
-const { query } = require('../Db');
+const { query } = require('../db');
 
 module.exports = app => {
   app.get('/denemeque', async (req, res) => {
