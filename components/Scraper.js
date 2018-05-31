@@ -90,6 +90,7 @@ class Scraper {
           $wrapper
             .find('.quote')
             .find('a')
+            .eq(i)
             .attr('href');
         data.ratingClass = $wrapper.find('.ui_bubble_rating').attr('class');
 

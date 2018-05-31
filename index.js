@@ -14,7 +14,7 @@ function normalizePort(val) {
   return false;
 }
 
-const PORT = normalizePort(process.env.PORT || 3000);
+const PORT = normalizePort(process.env.PORT || 5000);
 
 app.set('port', PORT);
 const server = http.createServer(app);
