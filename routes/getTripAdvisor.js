@@ -1,9 +1,9 @@
-const Scraper = require('../components/Scraper');
+const TripAdvisorScraper = require('../components/TripAdvisorScraper');
 const { queryArray } = require('../db');
 const redis = require('redis');
 
 const redisClient = redis.createClient();
-const scraper = new Scraper();
+const scraper = new TripAdvisorScraper();
 
 module.exports = app => {
   app.post('/getTripAdvisor', async (req, res) => {
@@ -26,8 +26,8 @@ module.exports = app => {
             const firstUrl = rows[0][0][0];
             const secondUrl = rows[0][0][1];
 
-            const firstVal = await scraper.scrapeTripAdvisor(firstUrl);
-            const secondVal = await scraper.scrapeTripAdvisor(secondUrl);
+            const firstVal = await scraper.scrape(firstUrl);
+            const secondVal = await scraper.scrape(secondUrl);
             const results = firstVal.concat(secondVal);
             redisClient.setex(
               `${req.body.id}:tripAdvisorData`,
@@ -35,11 +35,6 @@ module.exports = app => {
               JSON.stringify(results),
             );
             return res.status(200).send(results);
-
-            /* scraper.scrapeTripAdvisor(firstUrl).then(firstVal => {
-            redisClient.setex('tripAdvisorData', 900, JSON.stringify(firstVal));
-            return res.status(200).send(firstVal);
-          }); */
           } catch (err) {
             return res.status(500).send(err.message);
           }

@@ -13,6 +13,7 @@ app
 
 require('./routes/denemeque')(app);
 require('./routes/getTripAdvisor')(app);
+require('./routes/getZoover')(app);
 require('./routes/getHotels')(app);
 
 module.exports = app;
