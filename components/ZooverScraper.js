@@ -1,61 +1,62 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 
-class Scraper {
+class ZooverScraper {
   constructor(url) {
     this.urls = url;
-    this.count = 1;
   }
 
-  scrapeTripAdvisor(url) {
-    let arr = [];
+  scrape(url) {
+    const arr = [];
 
     return rp({
-      url: url,
+      url,
     }).then(body => {
       const $ = cheerio.load(body);
-      const $wrapper = $('.rev_wrap');
+      const $wrapper = $('.review');
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 10; i++) {
         const data = {};
 
         data.reviewer = $wrapper
-          .find('.info_text')
+          .find('.reviewDate')
           .eq(i)
-          .children()
+          .prev()
           .text();
         data.reviewDate = $wrapper
-          .find('.ratingDate')
+          .find('.reviewDate')
           .eq(i)
           .text();
         data.reviewHeader = $wrapper
-          .find('.noQuotes')
+          .find('.qaReviewTitle')
           .eq(i)
           .text();
         data.reviewBody = $wrapper
-          .find('.partial_entry')
           .eq(i)
+          .find('div')
+          .eq(0)
+          .next()
+          .next()
+          .find('div')
           .text();
-
+        data.isReplied = $wrapper
+          .find('div')
+          .eq(3)
+          .eq(i).length;
         data.reviewLink =
-          'https://www.tripadvisor.com.tr' +
+          'https://www.zoover.nl' +
           $wrapper
-            .find('.quote')
+            .eq(i)
             .find('a')
-            .eq(i)
+            .eq(0)
             .attr('href');
-
-        const ratingVal = parseInt(
+        data.rating = parseInt(
           $wrapper
-            .find('.ui_bubble_rating')
+            .find('div[data-qa]')
+            .find('span')
             .eq(i)
-            .attr('class')
-            .split(' ')[1]
-            .split('_')[1],
-          10,
+            .text(),
         );
-
-        data.rating = ratingVal / 10;
 
         arr.push(data);
       }
@@ -65,4 +66,4 @@ class Scraper {
   }
 }
 
-module.exports = Scraper;
+module.exports = ZooverScraper;
