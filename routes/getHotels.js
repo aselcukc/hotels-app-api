@@ -10,7 +10,7 @@ module.exports = app => {
         return res.status(500).send(err.message);
       }
 
-      if (hotelsData) {
+      if (JSON.parse(hotelsData).length) {
         return res.status(200).send(JSON.parse(hotelsData));
       } else {
         try {
