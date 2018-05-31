@@ -12,7 +12,7 @@ module.exports = app => {
         return res.status(500).send(err.message);
       }
 
-      if (JSON.parse(tripAdvisorData).length) {
+      if (tripAdvisorData && JSON.parse(tripAdvisorData).length) {
         return res.status(200).send(JSON.parse(tripAdvisorData));
       } else {
         try {
