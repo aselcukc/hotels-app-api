@@ -12,9 +12,10 @@ app
   .use(cors());
 
 require('./routes/denemeque')(app);
+require('./routes/getHotels')(app);
 require('./routes/getTripAdvisor')(app);
 require('./routes/getZoover')(app);
 require('./routes/getTrustYou')(app);
-require('./routes/getHotels')(app);
+require('./routes/getHolidayCheck')(app);
 
 module.exports = app;

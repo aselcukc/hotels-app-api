@@ -7,10 +7,10 @@ class TripAdvisorScraper {
   }
 
   scrape(url) {
-    let arr = [];
+    const arr = [];
 
     return rp({
-      url: url,
+      url,
     }).then(body => {
       const $ = cheerio.load(body);
       const $wrapper = $('.rev_wrap');
