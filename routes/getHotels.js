@@ -18,6 +18,7 @@ module.exports = app => {
             'select * from hotels inner join users_hotels on hotels.hotel_id = users_hotels.hotel_id inner join users on users.user_email = $1',
             [req.body.email],
           );
+          
           redisClient.setex(
             `${req.body.email}:hotelsData`,
             900,

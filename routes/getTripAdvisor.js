@@ -1,5 +1,6 @@
 const TripAdvisorScraper = require('../components/TripAdvisorScraper');
 const { queryArray } = require('../db');
+const { createTripAdvisorExcel } = require('../components/ExcelCreator');
 const redis = require('redis');
 
 const redisClient = redis.createClient();
@@ -41,5 +42,24 @@ module.exports = app => {
         }
       },
     );
+  });
+
+  /* app.post('/makeTripAdvisorExcel', (req, res) => {
+    createTripAdvisorExcel(req.body, res);
+  }); */
+
+  app.get('/getTripAdvisorExcel/:id', (req, res) => {
+    if (req.params.id) {
+      redisClient.get(
+        `${req.params.id}:tripAdvisorData`,
+        async (err, tripAdvisorData) => {
+          if (err) {
+            return res.status(500).send(err.message);
+          }
+
+          createTripAdvisorExcel(JSON.parse(tripAdvisorData), res);
+        },
+      );
+    }
   });
 };
