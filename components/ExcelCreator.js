@@ -2,10 +2,11 @@ const xl = require('excel4node');
 const path = require('path');
 const AWS = require('aws-sdk');
 
-/* AWS.config.update({
-  accessKeyId: '',
-  secretAccessKey: ''
-}) */
+AWS.config.update({
+  region: 'eu-central-1',
+  accessKeyId: 'AKIAJHLOHILFMXCUKZHA',
+  secretAccessKey: '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',
+});
 
 // Create a new instance of a Workbook class
 const wb = new xl.Workbook();
@@ -49,7 +50,8 @@ exports.createTripAdvisorExcel = async (arrValues, res) => {
       });
 
       const buffer = await wb.writeToBuffer();
-      const s3 = new AWS.S3();
+
+      const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
 
       const filename = `trip-advisor-${Date.now()}.xlsx`;
 
