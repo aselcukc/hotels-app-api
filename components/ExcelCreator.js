@@ -48,25 +48,15 @@ exports.createTripAdvisorExcel = async (arrValues, res) => {
           .style(style);
       });
 
-      const filename = path.join(
-        process.cwd(),
-        `trip-advisor-${Date.now()}.xlsx`,
-      );
-
-      /* wb.write(filename, (err, stats) => {
-        if (err) {
-          throw new Error(err.message);
-        }
-
-        return res.download(filename, `trip-advisor-${Date.now()}.xlsx`);
-      }); */
-
       const buffer = await wb.writeToBuffer();
       const s3 = new AWS.S3();
+
+      const filename = `trip-advisor-${Date.now()}.xlsx`;
+
       s3.putObject(
         {
           Bucket: 'hotels-app-assets',
-          Key: `trip-advisor-${Date.now()}.xlsx`,
+          Key: filename,
           Body: buffer,
           ACL: 'public-read',
         },
@@ -75,6 +65,15 @@ exports.createTripAdvisorExcel = async (arrValues, res) => {
             console.log('ERROR: ', err);
           }
           console.log('UPLOADED: ', resp);
+
+          res.attachment(filename);
+          const fileStream = s3
+            .getObject({
+              Bucket: 'hotels-app-assets',
+              Key: filename,
+            })
+            .createReadStream();
+          fileStream.pipe(res);
         },
       );
     } catch (err) {
