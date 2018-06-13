@@ -1,10 +1,11 @@
 const xl = require('excel4node');
 const path = require('path');
-const fs = require('fs');
-const redis = require('redis');
-const mime = require('mime');
+const AWS = require('aws-sdk');
 
-const redisClient = redis.createClient();
+/* AWS.config.update({
+  accessKeyId: '',
+  secretAccessKey: ''
+}) */
 
 // Create a new instance of a Workbook class
 const wb = new xl.Workbook();
@@ -20,7 +21,7 @@ const style = wb.createStyle({
   },
 });
 
-exports.createTripAdvisorExcel = (arrValues, res) => {
+exports.createTripAdvisorExcel = async (arrValues, res) => {
   if (arrValues.length) {
     try {
       arrValues.map((val, i) => {
@@ -46,27 +47,36 @@ exports.createTripAdvisorExcel = (arrValues, res) => {
           .number(val.isReplied)
           .style(style);
       });
+
       const filename = path.join(
         process.cwd(),
         `trip-advisor-${Date.now()}.xlsx`,
       );
 
-      wb.write(filename, (err, stats) => {
+      /* wb.write(filename, (err, stats) => {
         if (err) {
           throw new Error(err.message);
         }
 
-        /* const mimetype = mime.getType(filename);
-        res.setHeader('Content-Type', mimetype);
-        res.setHeader(
-          'Content-disposition',
-          `attachment; filename=${filename}`,
-        ); */
         return res.download(filename, `trip-advisor-${Date.now()}.xlsx`);
-        /* fs.unlink(filename, err => {
-          res.status(200).send('ALRAIT');
-        }); */
-      });
+      }); */
+
+      const buffer = await wb.writeToBuffer();
+      const s3 = new AWS.S3();
+      s3.putObject(
+        {
+          Bucket: 'hotels-app-assets',
+          Key: `trip-advisor-${Date.now()}.xlsx`,
+          Body: buffer,
+          ACL: 'public-read',
+        },
+        (err, resp) => {
+          if (err) {
+            console.log('ERROR: ', err);
+          }
+          console.log('UPLOADED: ', resp);
+        },
+      );
     } catch (err) {
       throw new Error(err.message);
     }
