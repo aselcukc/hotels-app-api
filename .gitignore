@@ -58,3 +58,4 @@ typings/
 notes/
 dump.rdb
 .env
+.vscode
